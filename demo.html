@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HireMedX - Healthcare Professional Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'light-grey': '#ECF0F1',
+                        'dark-charcoal': '#2C3E50',
+                        'pure-white': '#FFFFFF',
+                        'accent-blue': '#3498DB',
+                        'accent-blue-hover': '#2980B9'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #ECF0F1 0%, #FFFFFF 100%);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .professional-card {
+            background: #FFFFFF;
+            border: 1px solid #ECF0F1;
+        }
+    </style>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Router simulation
+        const useRouter = () => {
+            const [currentPath, setCurrentPath] = useState(window.location.hash.slice(1) || '/');
+
+            useEffect(() => {
+                const handleHashChange = () => {
+                    setCurrentPath(window.location.hash.slice(1) || '/');
+                };
+                window.addEventListener('hashchange', handleHashChange);
+                return () => window.removeEventListener('hashchange', handleHashChange);
+            }, []);
+
+            const navigate = (path) => {
+                window.location.hash = path;
+            };
+
+            return { currentPath, navigate };
+        };
+
+        // Link component
+        const Link = ({ to, children, className }) => {
+            return (
+                <a href={`#${to}`} className={className}>
+                    {children}
+                </a>
+            );
+        };
+
+        // Header Component
+        const Header = () => {
+            return (
+                <nav className="bg-pure-white shadow-sm sticky top-0 z-50">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="flex justify-between items-center h-16">
+                            <div className="flex items-center">
+                                <Link to="/" className="text-3xl font-bold text-dark-charcoal">HireMedX</Link>
+                            </div>
+                            <div className="hidden md:flex space-x-8">
+                                <Link to="/find-talent" className="text-dark-charcoal hover:text-accent-blue font-medium">Find Talent</Link>
+                                <Link to="/jobs" className="text-dark-charcoal hover:text-accent-blue font-medium">Browse Jobs</Link>
+                                <Link to="/professionals" className="text-dark-charcoal hover:text-accent-blue font-medium">Professionals</Link>
+                                <Link to="/about" className="text-dark-charcoal hover:text-accent-blue font-medium">About</Link>
+                            </div>
+                            <div className="flex space-x-4">
+                                <Link to="/login" className="text-dark-charcoal hover:text-accent-blue px-4 py-2 font-medium transition">Sign In</Link>
+                                <Link to="/signup" className="bg-accent-blue text-white px-4 py-2 rounded-lg hover:bg-accent-blue-hover transition">Join Now</Link>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            );
+        };
+
+        // Footer Component
+        const Footer = () => {
+            return (
+                <footer className="bg-gray-800 text-white py-12">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="grid md:grid-cols-4 gap-8">
+                            <div>
+                                <div className="text-2xl font-bold text-white mb-4">HireMedX</div>
+                                <p className="text-gray-400">Connecting healthcare professionals with opportunities nationwide.</p>
+                            </div>
+                            <div>
+                                <h4 className="font-semibold mb-4">For Professionals</h4>
+                                <ul className="space-y-2 text-gray-400">
+                                    <li><Link to="/signup" className="hover:text-white">Create Profile</Link></li>
+                                    <li><Link to="/jobs" className="hover:text-white">Browse Jobs</Link></li>
+                                    <li><a href="#" className="hover:text-white">Career Resources</a></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 className="font-semibold mb-4">For Employers</h4>
+                                <ul className="space-y-2 text-gray-400">
+                                    <li><Link to="/find-talent" className="hover:text-white">Post Jobs</Link></li>
+                                    <li><Link to="/professionals" className="hover:text-white">Search Talent</Link></li>
+                                    <li><a href="#" className="hover:text-white">Pricing</a></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 className="font-semibold mb-4">Support</h4>
+                                <ul className="space-y-2 text-gray-400">
+                                    <li><a href="#" className="hover:text-white">Help Center</a></li>
+                                    <li><a href="#" className="hover:text-white">Contact Us</a></li>
+                                    <li><a href="#" className="hover:text-white">Privacy Policy</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                            <p>&copy; 2024 HireMedX. All rights reserved.</p>
+                        </div>
+                    </div>
+                </footer>
+            );
+        };
+
+        // Home Page
+        const Home = () => {
+            return (
+                <>
+                    <section className="gradient-bg text-dark-charcoal py-20">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                            <h1 className="text-5xl font-bold mb-6">Connect Healthcare Professionals with Opportunities</h1>
+                            <p className="text-xl mb-8 max-w-3xl mx-auto text-gray-600">The premier platform for healthcare recruitment, professional portfolios, and career advancement across all medical specialties.</p>
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                <Link to="/professionals" className="bg-accent-blue text-white px-8 py-3 rounded-lg font-semibold hover:bg-accent-blue-hover transition">Find Healthcare Talent</Link>
+                                <Link to="/signup" className="border-2 border-accent-blue text-accent-blue px-8 py-3 rounded-lg font-semibold hover:bg-accent-blue hover:text-white transition">Create Professional Profile</Link>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section className="py-16 bg-pure-white">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <h2 className="text-3xl font-bold text-center mb-12 text-dark-charcoal">Healthcare Professionals We Serve</h2>
+                            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-6">
+                                {['👨‍⚕️ Doctors', '👩‍⚕️ Nurses', '🧑‍⚕️ Caregivers', '💊 Pharmacists', '🏃‍♂️ Physiotherapists', '🔬 Lab Assistants', '🏥 Hospital Staff', '➕ More'].map((category, idx) => {
+                                    const [emoji, ...name] = category.split(' ');
+                                    return (
+                                        <div key={idx} className="text-center p-4 rounded-lg hover:bg-light-grey transition cursor-pointer">
+                                            <div className="text-4xl mb-2">{emoji}</div>
+                                            <div className="font-semibold text-sm text-dark-charcoal">{name.join(' ')}</div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </section>
+
+                    <section className="py-16 bg-light-grey">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <h2 className="text-3xl font-bold text-center mb-12 text-dark-charcoal">Why Choose HireMedX?</h2>
+                            <div className="grid md:grid-cols-3 gap-8">
+                                {[
+                                    { emoji: '🎯', title: 'Specialized Matching', desc: 'Advanced algorithms match healthcare professionals with the right opportunities based on skills, experience, and preferences.' },
+                                    { emoji: '✅', title: 'Verified Credentials', desc: 'All professionals undergo credential verification to ensure quality and compliance with healthcare standards.' },
+                                    { emoji: '📈', title: 'Career Growth', desc: 'Access continuing education resources, career coaching, and professional development opportunities.' }
+                                ].map((feature, idx) => (
+                                    <div key={idx} className="text-center">
+                                        <div className="w-16 h-16 bg-pure-white rounded-full mx-auto mb-4 flex items-center justify-center shadow-sm">
+                                            <span className="text-2xl">{feature.emoji}</span>
+                                        </div>
+                                        <h3 className="text-xl font-semibold mb-3 text-dark-charcoal">{feature.title}</h3>
+                                        <p className="text-gray-600">{feature.desc}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                </>
+            );
+        };
+
+        // Jobs Page
+        const Jobs = () => {
+            const jobs = [
+                { id: 1, icon: '🏥', title: 'Senior Nurse - ICU', company: 'City General Hospital', description: 'Seeking experienced ICU nurse for critical care unit. 5+ years experience required.', salary: '$75,000 - $85,000' },
+                { id: 2, icon: '💊', title: 'Clinical Pharmacist', company: 'MedCare Pharmacy', description: 'Join our team providing pharmaceutical care and medication management.', salary: '$90,000 - $110,000' },
+                { id: 3, icon: '🔬', title: 'Lab Technician', company: 'Regional Medical Center', description: 'Laboratory technician position for blood work and diagnostic testing.', salary: '$45,000 - $55,000' }
+            ];
+
+            return (
+                <section className="py-16 bg-light-grey min-h-screen">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <h2 className="text-3xl font-bold text-center mb-12 text-dark-charcoal">Browse Available Jobs</h2>
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {jobs.map(job => (
+                                <div key={job.id} className="bg-pure-white rounded-lg shadow-sm p-6 card-hover">
+                                    <div className="flex items-center mb-4">
+                                        <div className="w-12 h-12 bg-light-grey rounded-lg flex items-center justify-center mr-4">
+                                            <span className="text-2xl">{job.icon}</span>
+                                        </div>
+                                        <div>
+                                            <h3 className="font-semibold text-lg text-dark-charcoal">{job.title}</h3>
+                                            <p className="text-gray-600">{job.company}</p>
+                                        </div>
+                                    </div>
+                                    <p className="text-gray-700 mb-4">{job.description}</p>
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-dark-charcoal font-semibold">{job.salary}</span>
+                                        <button onClick={() => alert(`Application process would begin for ${job.title}`)} className="bg-accent-blue text-white px-4 py-2 rounded-lg hover:bg-accent-blue-hover transition">Apply Now</button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // Professionals Page
+        const Professionals = () => {
+            const professionals = [
+                { id: 1, initials: 'DR', name: 'Dr. Sarah Johnson', title: 'Cardiologist', experience: '12 years', location: 'New York, NY', specialty: 'Interventional Cardiology' },
+                { id: 2, initials: 'MJ', name: 'Maria Rodriguez, RN', title: 'Registered Nurse', experience: '8 years', location: 'Los Angeles, CA', specialty: 'Emergency Medicine' },
+                { id: 3, initials: 'PT', name: 'James Chen, PT', title: 'Physical Therapist', experience: '6 years', location: 'Chicago, IL', specialty: 'Sports Rehabilitation' }
+            ];
+
+            return (
+                <section className="py-16 bg-light-grey min-h-screen">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <h2 className="text-3xl font-bold text-center mb-12 text-dark-charcoal">Professional Profiles</h2>
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {professionals.map(professional => (
+                                <div key={professional.id} className="professional-card rounded-lg shadow-sm p-6 card-hover">
+                                    <div className="text-center mb-4">
+                                        <div className="w-20 h-20 bg-accent-blue rounded-full mx-auto mb-3 flex items-center justify-center text-white text-2xl font-bold">{professional.initials}</div>
+                                        <h3 className="font-semibold text-lg text-dark-charcoal">{professional.name}</h3>
+                                        <p className="text-gray-600">{professional.title}</p>
+                                    </div>
+                                    <div className="space-y-2 text-sm">
+                                        <div className="flex items-center"><span className="text-gray-500 w-20">Experience:</span><span className="text-dark-charcoal">{professional.experience}</span></div>
+                                        <div className="flex items-center"><span className="text-gray-500 w-20">Location:</span><span className="text-dark-charcoal">{professional.location}</span></div>
+                                        <div className="flex items-center"><span className="text-gray-500 w-20">Specialty:</span><span className="text-dark-charcoal">{professional.specialty}</span></div>
+                                    </div>
+                                    <button onClick={() => alert(`Profile for ${professional.name} would open here`)} className="w-full mt-4 bg-accent-blue text-white py-2 rounded-lg hover:bg-accent-blue-hover transition">View Profile</button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // FindTalent Page
+        const FindTalent = () => {
+            const [formData, setFormData] = useState({ jobTitle: '', specialty: '', location: '', salary: '', description: '' });
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                alert('Job posting submitted! In a real application, this would process the job listing and payment.');
+            };
+
+            return (
+                <section className="py-16 bg-light-grey min-h-screen">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="max-w-4xl mx-auto">
+                            <div className="bg-pure-white rounded-lg shadow-sm p-8">
+                                <h3 className="text-2xl font-bold mb-6 text-center text-dark-charcoal">Post a Job & Find Top Healthcare Talent</h3>
+                                <form onSubmit={handleSubmit} className="space-y-6">
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label className="block text-sm font-medium text-dark-charcoal mb-2">Job Title</label>
+                                            <input type="text" className="w-full px-4 py-2 border border-light-grey rounded-lg focus:ring-2 focus:ring-accent-blue focus:border-transparent" placeholder="e.g. Registered Nurse - ICU" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-dark-charcoal mb-2">Healthcare Specialty</label>
+                                            <select className="w-full px-4 py-2 border border-light-grey rounded-lg focus:ring-2 focus:ring-accent-blue focus:border-transparent">
+                                                <option>Select Specialty</option>
+                                                <option>Nursing</option>
+                                                <option>Physician</option>
+                                                <option>Pharmacy</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div className="text-center">
+                                        <button type="submit" className="bg-accent-blue text-white px-8 py-3 rounded-lg hover:bg-accent-blue-hover transition font-semibold">Post Job - $99</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // About Page (simplified to fit)
+        const About = () => (
+            <section className="py-16 bg-pure-white min-h-screen">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 className="text-3xl font-bold text-center mb-12 text-dark-charcoal">Areas & Institutions We Serve</h2>
+                    <div className="text-center">
+                        <p className="text-lg text-gray-600 mb-6">Hospitals, Clinics, Dental Clinics, Pharmacies, Rehabilitation Centers, and more healthcare institutions across the country</p>
+                    </div>
+                </div>
+            </section>
+        );
+
+        // Login/Signup Pages (simplified)
+        const Login = () => (
+            <section className="py-16 bg-light-grey min-h-screen flex items-center">
+                <div className="max-w-md mx-auto w-full px-4">
+                    <div className="bg-pure-white rounded-lg shadow-sm p-8">
+                        <h2 className="text-3xl font-bold mb-6 text-center text-dark-charcoal">Sign In</h2>
+                        <form className="space-y-6">
+                            <div>
+                                <label className="block text-sm font-medium text-dark-charcoal mb-2">Email</label>
+                                <input type="email" className="w-full px-4 py-2 border border-light-grey rounded-lg" placeholder="you@example.com" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-dark-charcoal mb-2">Password</label>
+                                <input type="password" className="w-full px-4 py-2 border border-light-grey rounded-lg" placeholder="••••••••" />
+                            </div>
+                            <button type="submit" className="w-full bg-accent-blue text-white py-3 rounded-lg hover:bg-accent-blue-hover transition font-semibold">Sign In</button>
+                        </form>
+                        <p className="mt-6 text-center text-sm text-gray-600">Don't have an account? <Link to="/signup" className="text-accent-blue font-medium">Sign up</Link></p>
+                    </div>
+                </div>
+            </section>
+        );
+
+        const Signup = () => (
+            <section className="py-16 bg-light-grey min-h-screen flex items-center">
+                <div className="max-w-md mx-auto w-full px-4">
+                    <div className="bg-pure-white rounded-lg shadow-sm p-8">
+                        <h2 className="text-3xl font-bold mb-6 text-center text-dark-charcoal">Create Account</h2>
+                        <form className="space-y-6">
+                            <div>
+                                <label className="block text-sm font-medium text-dark-charcoal mb-2">Full Name</label>
+                                <input type="text" className="w-full px-4 py-2 border border-light-grey rounded-lg" placeholder="John Doe" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-dark-charcoal mb-2">Email</label>
+                                <input type="email" className="w-full px-4 py-2 border border-light-grey rounded-lg" placeholder="you@example.com" />
+                            </div>
+                            <button type="submit" className="w-full bg-accent-blue text-white py-3 rounded-lg hover:bg-accent-blue-hover transition font-semibold">Create Account</button>
+                        </form>
+                        <p className="mt-6 text-center text-sm text-gray-600">Already have an account? <Link to="/login" className="text-accent-blue font-medium">Sign in</Link></p>
+                    </div>
+                </div>
+            </section>
+        );
+
+        // Main App
+        const App = () => {
+            const { currentPath } = useRouter();
+
+            const renderPage = () => {
+                switch (currentPath) {
+                    case '/': return <Home />;
+                    case '/jobs': return <Jobs />;
+                    case '/professionals': return <Professionals />;
+                    case '/find-talent': return <FindTalent />;
+                    case '/about': return <About />;
+                    case '/login': return <Login />;
+                    case '/signup': return <Signup />;
+                    default: return <Home />;
+                }
+            };
+
+            return (
+                <div className="bg-light-grey min-h-screen flex flex-col">
+                    <Header />
+                    <main className="flex-grow">
+                        {renderPage()}
+                    </main>
+                    <Footer />
+                </div>
+            );
+        };
+
+        // Render
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>
