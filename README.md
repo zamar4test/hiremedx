@@ -62,3 +62,46 @@ npm run build
 - React Router DOM
 - Tailwind CSS
 - Vite
+
+## Deploying to Netlify
+
+### Option 1: Deploy via Netlify CLI
+
+1. Install Netlify CLI globally:
+```bash
+npm install -g netlify-cli
+```
+
+2. Build the project:
+```bash
+npm run build
+```
+
+3. Deploy to Netlify:
+```bash
+netlify deploy --prod
+```
+
+### Option 2: Deploy via Netlify UI
+
+1. Push your code to a Git repository (GitHub, GitLab, or Bitbucket)
+2. Go to [Netlify](https://app.netlify.com/) and sign in
+3. Click "Add new site" → "Import an existing project"
+4. Connect your Git repository
+5. Configure build settings:
+   - **Build command:** `npm run build`
+   - **Publish directory:** `dist`
+6. Click "Deploy site"
+
+### Option 3: Manual Deploy
+
+1. Build the project:
+```bash
+npm run build
+```
+
+2. Go to [Netlify Drop](https://app.netlify.com/drop)
+3. Drag and drop the `dist` folder
+
+> **Note:** The `netlify.toml` and `public/_redirects` files are already configured to handle client-side routing properly.
+
